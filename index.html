@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Warehouse Systems — Complete Playbook</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #060b14;
+  --bg2:       #0b1420;
+  --bg3:       #0f1d2e;
+  --panel:     #111e30;
+  --border:    #1e3352;
+  --cyan:      #00d4ff;
+  --cyan2:     #00a3cc;
+  --green:     #00ff88;
+  --green2:    #00cc6a;
+  --amber:     #ffb800;
+  --red:       #ff4d6d;
+  --purple:    #a855f7;
+  --white:     #e8f4ff;
+  --muted:     #4a6f94;
+  --text:      #b8d4ee;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── GRID BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: rgba(6,11,20,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 56px;
+}
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  margin-right: 2rem;
+  opacity: 0.9;
+}
+.nav-links {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-links a {
+  display: block;
+  padding: 0 14px;
+  height: 56px;
+  line-height: 56px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-decoration: none;
+  border-right: 1px solid var(--border);
+  transition: color .2s, background .2s;
+  white-space: nowrap;
+}
+.nav-links a:hover { color: var(--cyan); background: rgba(0,212,255,0.04); }
+.nav-links a.active { color: var(--cyan); background: rgba(0,212,255,0.06); }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 2rem 4rem;
+  overflow: hidden;
+  z-index: 1;
+}
+.hero-scan {
+  position: absolute;
+  top: -100%;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  animation: scan 4s linear infinite;
+  opacity: 0.4;
+}
+@keyframes scan { to { top: 110%; } }
+
+.hero-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--cyan);
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 6px 18px;
+  border-radius: 2px;
+  margin-bottom: 2rem;
+  animation: fadeUp .8s ease both;
+}
+.hero h1 {
+  font-family: var(--font-head);
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  animation: fadeUp .8s .1s ease both;
+}
+.hero h1 span { color: var(--cyan); }
+.hero-sub {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  margin-top: 1.5rem;
+  animation: fadeUp .8s .2s ease both;
+}
+.hero-systems {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+  animation: fadeUp .8s .35s ease both;
+}
+.sys-badge {
+  padding: 8px 20px;
+  border: 1px solid;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s;
+}
+.sys-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+}
+.sys-badge:hover { transform: translateY(-3px); }
+.sys-badge.wms { border-color: var(--cyan); color: var(--cyan); }
+.sys-badge.wms::before { background: var(--cyan); }
+.sys-badge.wes { border-color: var(--amber); color: var(--amber); }
+.sys-badge.wes::before { background: var(--amber); }
+.sys-badge.wcs { border-color: var(--green); color: var(--green); }
+.sys-badge.wcs::before { background: var(--green); }
+.sys-badge.sort { border-color: var(--purple); color: var(--purple); }
+.sys-badge.sort::before { background: var(--purple); }
+
+.hero-arrow {
+  margin-top: 4rem;
+  animation: fadeUp .8s .5s ease both, bounce 2s 2s ease-in-out infinite;
+  color: var(--muted);
+  font-size: 24px;
+}
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(24px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* ── SECTIONS ── */
+.section {
+  position: relative;
+  z-index: 1;
+  padding: 5rem 2rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan);
+  opacity: 0.6;
+  letter-spacing: 0.1em;
+}
+.section-title {
+  font-family: var(--font-head);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+/* ── REVEAL ANIMATION ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── ARCH DIAGRAM ── */
+.arch-diagram {
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 0;
+  align-items: center;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+.arch-node {
+  padding: 20px 30px;
+  border: 1px solid;
+  border-radius: 4px;
+  text-align: center;
+  position: relative;
+  transition: transform .3s, box-shadow .3s;
+  cursor: default;
+}
+.arch-node:hover { transform: scale(1.03); }
+.arch-node.wms { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,212,255,0.1); background: rgba(0,212,255,0.04); }
+.arch-node.wes { border-color: var(--amber); box-shadow: 0 0 20px rgba(255,184,0,0.1); background: rgba(255,184,0,0.04); }
+.arch-node.wcs { border-color: var(--green); box-shadow: 0 0 20px rgba(0,255,136,0.1); background: rgba(0,255,136,0.04); }
+.arch-node.sort { border-color: var(--purple); box-shadow: 0 0 20px rgba(168,85,247,0.1); background: rgba(168,85,247,0.04); }
+.arch-node-title {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.arch-node-sub { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
+.arch-node.wms .arch-node-title { color: var(--cyan); }
+.arch-node.wes .arch-node-title { color: var(--amber); }
+.arch-node.wcs .arch-node-title { color: var(--green); }
+.arch-node.sort .arch-node-title { color: var(--purple); }
+
+.arch-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+  gap: 2px;
+}
+.arch-arrow-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  background: var(--bg2);
+  border-radius: 2px;
+  animation: pulseLabel 3s ease-in-out infinite;
+}
+@keyframes pulseLabel {
+  0%,100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.arch-arrow-line {
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(to bottom, var(--cyan), var(--amber));
+  position: relative;
+  overflow: hidden;
+}
+.arch-arrow-line::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0; right: 0;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--cyan), transparent);
+  animation: flowDown 1.5s linear infinite;
+}
+@keyframes flowDown { to { top: 200%; } }
+.arch-arrow-down {
+  width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--amber);
+}
+
+/* ── TABLES ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 1rem 0;
+}
+.data-table th {
+  background: var(--panel);
+  padding: 10px 14px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  border: 1px solid var(--border);
+  position: sticky;
+  top: 56px;
+}
+.data-table td {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+  transition: background .2s;
+}
+.data-table tr:nth-child(even) td { background: rgba(15,29,46,0.5); }
+.data-table tr:hover td { background: rgba(0,212,255,0.04); }
+.data-table .code { font-family: var(--font-mono); font-size: 11px; font-weight: 600; }
+.data-table .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+.tag-system { background: rgba(0,212,255,0.1); color: var(--cyan); }
+.tag-entity { background: rgba(0,255,136,0.1); color: var(--green); }
+.tag-concept { background: rgba(255,184,0,0.1); color: var(--amber); }
+.tag-protocol { background: rgba(168,85,247,0.1); color: var(--purple); }
+.tag-process { background: rgba(255,77,109,0.1); color: var(--red); }
+.tag-reason { background: rgba(74,111,148,0.15); color: #7eb8d4; }
+.tag-sorter { background: rgba(168,85,247,0.15); color: var(--purple); }
+
+/* ── MESSAGE FLOW GRID ── */
+.msg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin: 1rem 0;
+}
+.msg-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 16px;
+  transition: border-color .25s, transform .25s, box-shadow .25s;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+.msg-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+}
+.msg-card.wm-wes::before { background: var(--cyan); }
+.msg-card.wes-wm::before { background: var(--green); }
+.msg-card.sorter::before { background: var(--purple); }
+.msg-card:hover {
+  border-color: rgba(0,212,255,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+.msg-id {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.msg-card.wm-wes .msg-id { color: var(--cyan); }
+.msg-card.wes-wm .msg-id { color: var(--green); }
+.msg-card.sorter .msg-id { color: var(--purple); }
+.msg-name { font-weight: 600; font-size: 13px; color: var(--white); margin-bottom: 6px; }
+.msg-dir {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.msg-desc { font-size: 12px; color: var(--text); opacity: 0.8; line-height: 1.4; }
+
+/* ── SLUG TYPES ── */
+.slug-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 1.5rem 0;
+}
+.slug-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+  transition: transform .3s, box-shadow .3s;
+  position: relative;
+  overflow: hidden;
+}
+.slug-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
+.slug-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  display: block;
+}
+.slug-name {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.slug-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--cyan);
+  margin-bottom: 10px;
+  letter-spacing: 0.1em;
+}
+.slug-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+/* ── ALGORITHM STEPS ── */
+.algo-steps { margin: 1.5rem 0; }
+.algo-step {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  transition: background .2s;
+}
+.algo-step:last-child { border-bottom: none; }
+.algo-step:hover { background: rgba(0,212,255,0.02); }
+.algo-step-num {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 1px solid var(--cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cyan);
+}
+.algo-step-content h4 { font-weight: 600; color: var(--white); font-size: 14px; margin-bottom: 4px; }
+.algo-step-content p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.algo-step-content code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(0,212,255,0.08);
+  color: var(--cyan);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+/* ── REASON CODES ── */
+.reason-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin: 1.5rem 0;
+}
+.reason-card {
+  padding: 14px 16px;
+  border-radius: 4px;
+  border: 1px solid;
+  background: rgba(0,0,0,0.2);
+}
+.reason-card.ok { border-color: rgba(0,255,136,0.3); }
+.reason-card.warn { border-color: rgba(255,184,0,0.3); }
+.reason-card.err { border-color: rgba(255,77,109,0.3); }
+.reason-code {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.reason-card.ok .reason-code { color: var(--green); }
+.reason-card.warn .reason-code { color: var(--amber); }
+.reason-card.err .reason-code { color: var(--red); }
+.reason-name { font-size: 11px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+.reason-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+/* ─────────────────────────────────────────
+   ANIMATED SEQUENCE DIAGRAM
+───────────────────────────────────────── */
+#seq-diagram {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem 1rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.seq-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.seq-btn {
+  padding: 8px 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  border: 1px solid;
+  background: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.seq-btn:active { transform: scale(0.97); }
+.seq-btn.play { border-color: var(--cyan); color: var(--cyan); }
+.seq-btn.play:hover { background: rgba(0,212,255,0.1); }
+.seq-btn.pause { border-color: var(--amber); color: var(--amber); }
+.seq-btn.pause:hover { background: rgba(255,184,0,0.1); }
+.seq-btn.reset { border-color: var(--muted); color: var(--muted); }
+.seq-btn.reset:hover { background: rgba(74,111,148,0.1); }
+.seq-speed {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+.seq-speed button {
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: border-color .2s;
+}
+.seq-speed button.active { border-color: var(--cyan); color: var(--cyan); }
+.seq-progress-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.seq-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+  border-radius: 2px;
+  transition: width .3s ease;
+  width: 0%;
+}
+.seq-section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  margin-bottom: .5rem;
+  padding: 4px 10px;
+  background: rgba(0,212,255,0.06);
+  border-left: 2px solid var(--cyan);
+  display: inline-block;
+}
+
+/* Lifelines canvas area */
+.seq-canvas {
+  position: relative;
+  min-height: 200px;
+  overflow-x: auto;
+}
+
+/* Participant headers */
+.seq-participants {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 0;
+  position: sticky;
+  top: 56px;
+  z-index: 10;
+  background: var(--bg2);
+  padding-bottom: 0;
+}
+.seq-participant {
+  text-align: center;
+  padding: 10px 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  position: relative;
+}
+.seq-participant.wms { border-color: var(--cyan); color: var(--cyan); background: rgba(0,212,255,0.06); }
+.seq-participant.wes { border-color: var(--amber); color: var(--amber); background: rgba(255,184,0,0.06); }
+.seq-participant.wcs { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.06); }
+.seq-participant.sorter { border-color: var(--purple); color: var(--purple); background: rgba(168,85,247,0.06); }
+.seq-participant .p-full {
+  display: block;
+  font-size: 8px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 2px;
+  letter-spacing: 0.03em;
+}
+
+/* The lifeline verticals */
+.seq-lifelines {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.seq-lifeline {
+  display: flex;
+  justify-content: center;
+}
+.seq-lifeline-line {
+  width: 1px;
+  height: 100%;
+  background: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 6px, transparent 6px, transparent 12px);
+}
+
+/* Steps area */
+.seq-steps-area {
+  position: relative;
+  padding: 12px 0;
+  min-height: 400px;
+}
+
+/* Each message row */
+.seq-step {
+  display: none;
+  position: relative;
+  margin: 0 0 6px;
+  min-height: 44px;
+  align-items: center;
+  z-index: 5;
+  animation: stepIn .4s ease both;
+}
+.seq-step.visible { display: flex; }
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(-8px) scaleY(0.8); }
+  to   { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+/* Section separator */
+.seq-sep {
+  display: none;
+  position: relative;
+  z-index: 5;
+  margin: 10px 0 6px;
+  padding: 6px 12px;
+  background: rgba(0,212,255,0.06);
+  border-left: 2px solid var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  animation: stepIn .4s ease both;
+}
+.seq-sep.visible { display: block; }
+
+/* Note blocks */
+.seq-note {
+  display: none;
+  position: relative;
+  z-index: 5;
+  margin: 6px 0;
+  padding: 8px 12px;
+  background: rgba(255,184,0,0.05);
+  border: 1px dashed rgba(255,184,0,0.25);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--amber);
+  letter-spacing: 0.04em;
+  animation: stepIn .4s ease both;
+}
+.seq-note.visible { display: block; }
+
+/* Arrow with label */
+.seq-arrow-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  width: 100%;
+  height: 44px;
+  position: relative;
+}
+
+/* Col positions: 0=WMS, 1=WES, 2=WCS, 3=Sorter */
+.seq-arrow-wrapper {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.seq-msg-label {
+  position: absolute;
+  top: 2px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 2px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.seq-line {
+  height: 1.5px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: left center;
+  animation: growLine .4s ease both;
+}
+@keyframes growLine {
+  from { transform: translateY(-50%) scaleX(0); }
+  to   { transform: translateY(-50%) scaleX(1); }
+}
+.seq-line.solid { }
+.seq-line.dashed {
+  background: none !important;
+  border-top-width: 1.5px;
+  border-top-style: dashed;
+  height: 0;
+  top: calc(50% - 0.75px);
+}
+
+.seq-arrowhead {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+}
+.seq-arrowhead.right {
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+.seq-arrowhead.left {
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+.seq-step-num {
+  position: absolute;
+  left: -28px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted);
+  width: 20px;
+  text-align: right;
+}
+
+/* Self-loop (WES→WES) */
+.self-loop {
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+.self-loop-box {
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: var(--bg2);
+  animation: stepIn .4s ease both;
+}
+.self-loop-box.wms { border-color: rgba(0,212,255,0.3); color: var(--cyan); }
+.self-loop-box.wes { border-color: rgba(255,184,0,0.3); color: var(--amber); }
+.self-loop-box.wcs { border-color: rgba(0,255,136,0.3); color: var(--green); }
+
+/* ALT block */
+.seq-alt {
+  display: none;
+  margin: 4px 0;
+  border: 1px solid rgba(168,85,247,0.25);
+  border-radius: 3px;
+  padding: 8px 12px;
+  position: relative;
+  z-index: 5;
+  animation: stepIn .4s ease both;
+}
+.seq-alt.visible { display: block; }
+.seq-alt-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--purple);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+/* Live Example Steps */
+.example-timeline {
+  position: relative;
+  padding-left: 36px;
+}
+.example-timeline::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 8px, transparent 8px, transparent 16px);
+}
+.ex-step {
+  position: relative;
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.ex-step.visible { opacity: 1; transform: translateX(0); }
+.ex-step::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 8px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid;
+  background: var(--bg);
+  z-index: 2;
+}
+.ex-step.step-ok::before { border-color: var(--cyan); box-shadow: 0 0 8px rgba(0,212,255,0.4); }
+.ex-step.step-warn::before { border-color: var(--amber); }
+.ex-step.step-alert::before { border-color: var(--red); }
+.ex-step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.ex-step-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  min-width: 28px;
+}
+.ex-step-phase {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--white);
+}
+.ex-step-action {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-left: 38px;
+}
+.ex-step-msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  background: rgba(0,212,255,0.07);
+  border: 1px solid rgba(0,212,255,0.2);
+  color: var(--cyan);
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-top: 4px;
+  margin-left: 38px;
+  display: block;
+  width: fit-content;
+}
+
+/* ── STATS ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 2rem 0;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+  transition: border-color .3s;
+}
+.stat-card:hover { border-color: var(--cyan); }
+.stat-num {
+  font-family: var(--font-head);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--cyan);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; color: var(--muted); }
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* ── SECTION SEPARATOR ── */
+.full-sep {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px) {
+  .seq-participants { grid-template-columns: repeat(4, 1fr); }
+  .seq-participant { font-size: 8px; padding: 6px 4px; }
+  .seq-participant .p-full { display: none; }
+  .data-table { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">WH-PLAYBOOK v1.0</span>
+  <div class="nav-links">
+    <a href="#architecture">ARCHITECTURE</a>
+    <a href="#terminology">TERMINOLOGY</a>
+    <a href="#messages">MESSAGES</a>
+    <a href="#inbound">INBOUND</a>
+    <a href="#slugs">SLUGS</a>
+    <a href="#outbound">OUTBOUND</a>
+    <a href="#diagram">SEQUENCE</a>
+    <a href="#recovery">RECOVERY</a>
+    <a href="#example">LIVE EXAMPLE</a>
+    <a href="#legends">LEGENDS</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-scan"></div>
+  <div class="hero-tag">ENTERPRISE WAREHOUSE SYSTEMS — COMPLETE OPERATIONAL PLAYBOOK</div>
+  <h1>WMS ↔ WES ↔ WCS ↔ <span>SORTER</span></h1>
+  <p class="hero-sub">INBOUND · SLUG BUILDING · OUTBOUND · SORTING · ROUTING · VAS · RECOVERY</p>
+  <div class="hero-systems">
+    <div class="sys-badge wms">WMS — Warehouse Management</div>
+    <div class="sys-badge wes">WES — Warehouse Execution</div>
+    <div class="sys-badge wcs">WCS — Warehouse Control</div>
+    <div class="sys-badge sort">SORTER — High-Speed Sortation</div>
+  </div>
+  <div class="hero-arrow">↓</div>
+</section>
+
+<hr class="full-sep">
+
+<!-- STATS -->
+<div class="section reveal" style="padding-top:3rem;padding-bottom:2rem;">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" data-count="17">0</div><div class="stat-label">MESSAGE TYPES</div></div>
+    <div class="stat-card"><div class="stat-num" data-count="2500">0</div><div class="stat-label">TOTES / WAVE</div></div>
+    <div class="stat-card"><div class="stat-num" data-count="5">0</div><div class="stat-label">SLUG TYPES</div></div>
+    <div class="stat-card"><div class="stat-num" data-count="4">0</div><div class="stat-label">SYSTEMS</div></div>
+    <div class="stat-card"><div class="stat-num" data-count="30">0</div><div class="stat-label">DAY FILE RETENTION</div></div>
+    <div class="stat-card"><div class="stat-num" data-count="100">0</div><div class="stat-label">MS VALIDATION TARGET</div></div>
+  </div>
+</div>
+
+<hr class="full-sep">
+
+<!-- ARCHITECTURE -->
+<section id="architecture" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">System Architecture</h2>
+  </div>
+
+  <div class="arch-diagram reveal">
+    <div class="arch-node wms">
+      <div class="arch-node-title">WMS — Warehouse Management System</div>
+      <div class="arch-node-sub">SYSTEM OF RECORD · INVENTORY · ORDERS · WAVES · TASKS · SHIPPING</div>
+    </div>
+    <div class="arch-arrow">
+      <div class="arch-arrow-label">sFTP FILES + TCP/IP SOCKETS</div>
+      <div class="arch-arrow-line"></div>
+      <div class="arch-arrow-down"></div>
+    </div>
+    <div class="arch-node wes">
+      <div class="arch-node-title">WES — Warehouse Execution System</div>
+      <div class="arch-node-sub">MESSAGE BROKER · SLUG BUILDER · VALIDATION · RECOVERY ORCHESTRATION</div>
+    </div>
+    <div class="arch-arrow">
+      <div class="arch-arrow-label">TCP/IP · CARET ^ · PIPE | · FIXED-WIDTH</div>
+      <div class="arch-arrow-line"></div>
+      <div class="arch-arrow-down"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="arch-node wcs">
+        <div class="arch-node-title">WCS</div>
+        <div class="arch-node-sub">CONVEYORS · SCANNERS · SCALES · DIVERTS</div>
+      </div>
+      <div class="arch-node sort">
+        <div class="arch-node-title">SORTER</div>
+        <div class="arch-node-sub">BUFFER LANES · SLUG SEQUENCING · DISCHARGE</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:2.5rem;">
+    <h3 style="font-family:var(--font-head);font-size:1.1rem;color:var(--white);margin-bottom:1rem;">Ownership Matrix</h3>
+    <div style="overflow-x:auto;">
+    <table class="data-table">
+      <thead><tr><th>Capability</th><th>WMS</th><th>WES</th><th>WCS</th><th>Sorter</th></tr></thead>
+      <tbody>
+        <tr><td>Inventory Accuracy &amp; LPN Lifecycle</td><td style="color:var(--cyan);text-align:center;">✦</td><td></td><td></td><td></td></tr>
+        <tr><td>Order Management &amp; Allocation</td><td style="color:var(--cyan);text-align:center;">✦</td><td></td><td></td><td></td></tr>
+        <tr><td>Wave Planning &amp; Release</td><td style="color:var(--cyan);text-align:center;">✦</td><td></td><td></td><td></td></tr>
+        <tr><td>Slug Creation &amp; Management</td><td></td><td style="color:var(--amber);text-align:center;">✦</td><td></td><td></td></tr>
+        <tr><td>Message Validation &amp; Brokering</td><td></td><td style="color:var(--amber);text-align:center;">✦</td><td></td><td></td></tr>
+        <tr><td>Protocol Translation (caret / pipe / fixed)</td><td></td><td style="color:var(--amber);text-align:center;">✦</td><td></td><td></td></tr>
+        <tr><td>Conveyor &amp; Scanner Control</td><td></td><td></td><td style="color:var(--green);text-align:center;">✦</td><td></td></tr>
+        <tr><td>Weight &amp; Dimension Validation</td><td></td><td></td><td style="color:var(--green);text-align:center;">✦</td><td></td></tr>
+        <tr><td>Divert Actuation &amp; Lane Assignment</td><td></td><td></td><td style="color:var(--green);text-align:center;">✦</td><td></td></tr>
+        <tr><td>High-Speed Buffer &amp; Slug Sequencing</td><td></td><td></td><td></td><td style="color:var(--purple);text-align:center;">✦</td></tr>
+        <tr><td>Recovery Initiation</td><td></td><td style="color:var(--amber);text-align:center;">✦</td><td></td><td style="color:var(--purple);text-align:center;">✦</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- TERMINOLOGY -->
+<section id="terminology" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Core Terminology</h2>
+  </div>
+  <div class="reveal" style="overflow-x:auto;">
+  <table class="data-table">
+    <thead><tr><th>Term</th><th>Full Form</th><th>Category</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td class="code">LPN</td><td>License Plate Number</td><td><span class="tag tag-entity">Entity</span></td><td>Unique barcode label on every physical carton or tote. The fundamental tracking unit for all warehouse inventory.</td></tr>
+      <tr><td class="code">iLPN</td><td>Inbound License Plate Number</td><td><span class="tag tag-entity">Entity</span></td><td>Vendor carton arriving from supplier. Lifecycle: Expected → Received → Putaway → Reserve.</td></tr>
+      <tr><td class="code">oLPN</td><td>Outbound License Plate Number</td><td><span class="tag tag-entity">Entity</span></td><td>Shipping carton going to customer. Lifecycle: Allocated → Picked → Packed → Weighed → Manifested → Loaded → Shipped.</td></tr>
+      <tr><td class="code">ASN</td><td>Advanced Shipment Notice</td><td><span class="tag tag-entity">Entity</span></td><td>Batch file from vendor pre-advising a shipment. Contains iLPN list, items, quantities, weights. Enables pre-creation of receiving records.</td></tr>
+      <tr><td class="code">Wave</td><td>Pick / Pack Wave</td><td><span class="tag tag-concept">Concept</span></td><td>Grouping of orders released together. Pick Wave drives picking and slug building. Pack Wave controls packing station flow.</td></tr>
+      <tr><td class="code">Slug</td><td>Sorter Processing Group</td><td><span class="tag tag-concept">Concept</span></td><td>Sequenced, capacity-controlled group of totes processed together by the sorter. Core throughput control mechanism.</td></tr>
+      <tr><td class="code">Tote</td><td>Picking Container</td><td><span class="tag tag-entity">Entity</span></td><td>Reusable plastic container used by pickers to transport units from pick locations to packing stations. Tracked by its LPN.</td></tr>
+      <tr><td class="code">Spur</td><td>Conveyor Diversion Lane</td><td><span class="tag tag-entity">Entity</span></td><td>Branch lane off the main conveyor where cartons are physically diverted. Types: parcel, live-load, LTL, reject, QC.</td></tr>
+      <tr><td class="code">VAS</td><td>Value Added Services</td><td><span class="tag tag-process">Process</span></td><td>Special processing before shipment: gift wrapping, compliance labeling, kitting, inspection. Reject Flag = Y while open.</td></tr>
+      <tr><td class="code">Pallet Group</td><td>Shipment Pallet Assignment</td><td><span class="tag tag-entity">Entity</span></td><td>Logical grouping of oLPNs assigned to a specific pallet/trailer for LTL, TL, or live-load. Managed via msgs 117/118/119.</td></tr>
+      <tr><td class="code">Replenishment</td><td>Pick Face Replenishment</td><td><span class="tag tag-process">Process</span></td><td>Moving inventory from reserve to forward pick when face drops below threshold. Independent of wave/slug process.</td></tr>
+      <tr><td class="code">STX / ETX</td><td>Start/End of Text</td><td><span class="tag tag-protocol">Protocol</span></td><td>Control chars wrapping every TCP socket message. STX = 0x02 (start), ETX = 0x03 (end). Required on all connections.</td></tr>
+      <tr><td class="code">ACK / NAK</td><td>Acknowledgement / Negative Ack</td><td><span class="tag tag-protocol">Protocol</span></td><td>ACK confirms successful receipt. NAK signals rejection with reason. NAK triggers retry and alert.</td></tr>
+      <tr><td class="code">HB</td><td>Heartbeat</td><td><span class="tag tag-protocol">Protocol</span></td><td>Periodic keepalive from WES to WCS/Sorter every 5 seconds. Missing HB_ACK marks device OFFLINE immediately.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- MESSAGES -->
+<section id="messages" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Message Architecture</h2>
+  </div>
+
+  <h3 class="reveal" style="font-family:var(--font-head);font-size:1rem;color:var(--white);margin-bottom:1rem;">WMS → WES → WCS (Real-Time)</h3>
+  <div class="msg-grid reveal">
+    <div class="msg-card wm-wes"><div class="msg-id">100</div><div class="msg-name">ASN File</div><div class="msg-dir">WMS → WES (sFTP)</div><div class="msg-desc">Pre-advise inbound shipment. Contains iLPN list, items, weights, dimensions.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">101</div><div class="msg-name">LPN Destination (DEST)</div><div class="msg-dir">WMS → WES → WCS</div><div class="msg-desc">Routes an iLPN to reserve/putaway or oLPN to a target lane. Primary routing instruction.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">102</div><div class="msg-name">Verify ASN (ASNVERIFY)</div><div class="msg-dir">WMS → WES</div><div class="msg-desc">Confirms all iLPNs in an ASN have been received. Closes ASN verification loop.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">103</div><div class="msg-name">Wave Download</div><div class="msg-dir">WMS → WES (sFTP)</div><div class="msg-desc">Releases wave. Primary driver of slug creation. Contains all tasks, LPNs, VAS codes, S* task types.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">105</div><div class="msg-name">Tote Pick Complete (ZPK)</div><div class="msg-dir">WMS → WES</div><div class="msg-desc">Signals tote closure. WES maps tote to slug and fires 6A2 to Sorter.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">106</div><div class="msg-name">Pack Complete (PACKED)</div><div class="msg-dir">WMS → WES (pipe-delimited)</div><div class="msg-desc">oLPN fully packed. Contains weight, labels, reject flag, mode, pallet group, tracking #. Only pipe-delimited message.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">107</div><div class="msg-name">VAS Complete</div><div class="msg-dir">WMS → WES</div><div class="msg-desc">VAS processing completed. WES clears reject flag and releases carton to conveyor.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">114</div><div class="msg-name">Adjust / Split</div><div class="msg-dir">WMS → WES</div><div class="msg-desc">oLPN contents changed — unit added, removed, split, or cancelled. WES updates routing.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">116</div><div class="msg-name">Consume Tote</div><div class="msg-dir">WMS → WES</div><div class="msg-desc">Tote empty and ready to re-enter picking loop. Triggers 6A4 Tote Complete to Sorter.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">117</div><div class="msg-name">Pallet Group Update (PGUPDATE)</div><div class="msg-dir">WMS → WES (event 9030)</div><div class="msg-desc">Updates pallet group assignment via manual load planning.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">118</div><div class="msg-name">Pallet Group Assign</div><div class="msg-dir">WMS → WES (event 9031)</div><div class="msg-desc">Assigns spur to pallet group or handles routing request for PG.</div></div>
+    <div class="msg-card wm-wes"><div class="msg-id">119</div><div class="msg-name">Pallet Group Unassign</div><div class="msg-dir">WMS → WES (event 9032)</div><div class="msg-desc">Removes spur assignment on yard move or shipment close.</div></div>
+  </div>
+
+  <h3 class="reveal" style="font-family:var(--font-head);font-size:1rem;color:var(--white);margin:2rem 0 1rem;">WCS → WES → WMS (Real-Time)</h3>
+  <div class="msg-grid reveal">
+    <div class="msg-card wes-wm"><div class="msg-id">200</div><div class="msg-name">Container Status (SCANNED)</div><div class="msg-dir">WCS → WES → WMS</div><div class="msg-desc">iLPN barcode read at receiving scanner. Includes actual weight, dimensions, reason code.</div></div>
+    <div class="msg-card wes-wm"><div class="msg-id">201</div><div class="msg-name">Route Request (ROUTINGREQ)</div><div class="msg-dir">WCS → WES → WMS</div><div class="msg-desc">WCS cannot determine routing. Requests WMS decision. WMS responds with 101 DEST.</div></div>
+    <div class="msg-card wes-wm"><div class="msg-id">202</div><div class="msg-name">IB Pallet Build (IBPLT)</div><div class="msg-dir">WCS → WES → WMS</div><div class="msg-desc">Pallet built at receiving sorter after grouping iLPNs. WMS assigns pallet location.</div></div>
+    <div class="msg-card wes-wm"><div class="msg-id">208</div><div class="msg-name">Manifest Confirm</div><div class="msg-dir">WCS → WES → WMS</div><div class="msg-desc">oLPN enters manifest lane. WES assigns tracking number. WMS status = Manifested.</div></div>
+    <div class="msg-card wes-wm"><div class="msg-id">209</div><div class="msg-name">Loaded Confirm</div><div class="msg-dir">WCS → WES → WMS</div><div class="msg-desc">oLPN loaded to truck. WMS marks shipment closed. Status = Shipped.</div></div>
+    <div class="msg-card wes-wm"><div class="msg-id">211</div><div class="msg-name">Locate LPN / Divert Confirm</div><div class="msg-dir">WCS → WES → WMS</div><div class="msg-desc">LPN diverted. Sent except for recirculation/reject. Confirms physical destination.</div></div>
+  </div>
+
+  <h3 class="reveal" style="font-family:var(--font-head);font-size:1rem;color:var(--white);margin:2rem 0 1rem;">Sorter Messages (Fixed-Width)</h3>
+  <div class="msg-grid reveal">
+    <div class="msg-card sorter"><div class="msg-id">6A2</div><div class="msg-name">Picked LPN Directive</div><div class="msg-dir">WES → Sorter</div><div class="msg-desc">Associates tote with slug on 105 receipt. Contains Slug ID, tote count, carton count, priority, routing.</div></div>
+    <div class="msg-card sorter"><div class="msg-id">6A3</div><div class="msg-name">Shipping Carton Complete</div><div class="msg-dir">WES → Sorter</div><div class="msg-desc">Forwarded from 106 Packed. Notifies Sorter oLPN is packed and ready for final sortation.</div></div>
+    <div class="msg-card sorter"><div class="msg-id">6A4</div><div class="msg-name">Tote Complete</div><div class="msg-dir">WES → Sorter</div><div class="msg-desc">Forwarded from 116 Consume Tote. Tells Sorter tote is empty. Triggers slug closure tracking.</div></div>
+    <div class="msg-card sorter"><div class="msg-id">6R2</div><div class="msg-name">Recovery Directive</div><div class="msg-dir">WES → Sorter</div><div class="msg-desc">Replay of 6A2 directives during recovery. Restores Sorter routing queue after directive loss.</div></div>
+    <div class="msg-card sorter"><div class="msg-id">6</div><div class="msg-name">Divert Confirmation</div><div class="msg-dir">Sorter → WES</div><div class="msg-desc">Sorter confirms tote physically diverted to correct lane. Closes 6A2 directive.</div></div>
+    <div class="msg-card sorter"><div class="msg-id">7</div><div class="msg-name">Recovery Initiation</div><div class="msg-dir">Sorter → WES</div><div class="msg-desc">Sorter signals directive loss. WES replays 6A2s. Auto-closes after 10s of no directives.</div></div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- INBOUND -->
+<section id="inbound" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Inbound Process</h2>
+  </div>
+  <div class="reveal" style="overflow-x:auto;">
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Phase</th><th>Owner</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="code">1</td><td>ASN Receipt</td><td style="color:var(--cyan);">WMS</td><td>Parse 100 ASN file. Create expected iLPN records. Status = Expected.</td></tr>
+      <tr><td class="code">2</td><td>Physical Scan</td><td style="color:var(--green);">WCS</td><td>Read barcode at receiving sorter. Capture weight/dimensions. Send SCANNED (200) to WES → WMS.</td></tr>
+      <tr><td class="code">3</td><td>LPN Validation</td><td style="color:var(--cyan);">WMS</td><td>Match scanned LPN against ASN. Unknown LPN (reason UN) → exception spur. Known → proceed.</td></tr>
+      <tr><td class="code">4</td><td>Weight Check</td><td style="color:var(--green);">WCS</td><td>Absolute tolerance (AT) and Relative tolerance (RT) checks. Fail → QC spur. Pass → proceed.</td></tr>
+      <tr><td class="code">5</td><td>Routing</td><td style="color:var(--amber);">WES+WMS</td><td>WMS sends 101 DEST with reserve putaway location. WCS executes conveyor move.</td></tr>
+      <tr><td class="code">6</td><td>Palletization</td><td style="color:var(--green);">WCS → WMS</td><td>WCS groups iLPNs onto pallet. Sends 202 IBPLT. WMS assigns pallet ID and reserve location.</td></tr>
+      <tr><td class="code">7</td><td>ASN Verify</td><td style="color:var(--cyan);">WMS</td><td>All iLPNs received. WMS sends 102 ASNVERIFY to WES/WCS. ASN closed.</td></tr>
+      <tr><td class="code">8</td><td>Putaway</td><td style="color:var(--cyan);">WMS</td><td>Generate putaway task. Assign reserve slot. Confirm location after completion. Status = Reserve.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="reveal" style="margin-top:2rem;">
+    <h3 style="font-family:var(--font-head);font-size:1rem;color:var(--white);margin-bottom:1rem;">Weight Validation Logic</h3>
+    <div class="reason-grid">
+      <div class="reason-card err"><div class="reason-code">AT</div><div class="reason-name">Absolute Tolerance</div><div class="reason-desc">Weight outside fixed absolute bounds regardless of expected. → QC Spur</div></div>
+      <div class="reason-card err"><div class="reason-code">RT</div><div class="reason-name">Relative Tolerance</div><div class="reason-desc">Weight deviates from expected by more than configured %. → QC Spur</div></div>
+      <div class="reason-card ok"><div class="reason-code">DS</div><div class="reason-name">Diverted Successfully</div><div class="reason-desc">Both checks passed. Normal divert to target lane confirmed.</div></div>
+      <div class="reason-card err"><div class="reason-code">UN</div><div class="reason-name">Unknown Carton</div><div class="reason-desc">Barcode not found in WES/WMS. → Exception Spur</div></div>
+      <div class="reason-card warn"><div class="reason-code">PG</div><div class="reason-name">Unknown Pallet Group</div><div class="reason-desc">Pallet group missing. WES requests routing decision from WMS.</div></div>
+      <div class="reason-card warn"><div class="reason-code">LF</div><div class="reason-name">Lane Full</div><div class="reason-desc">Target lane at capacity. WES requests alternate lane from WMS.</div></div>
+      <div class="reason-card warn"><div class="reason-code">MD</div><div class="reason-name">Missing Dimensions</div><div class="reason-desc">Dimensioner failed. Route to exception for manual measurement.</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- SLUGS -->
+<section id="slugs" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Slug Building</h2>
+  </div>
+  <p class="reveal" style="max-width:820px;margin-bottom:2rem;color:var(--muted);">A slug is a sequenced, capacity-controlled group of totes processed together by the sorter. Slugs prevent buffer overflow, maintain processing order, and balance lane utilization. Core throughput control mechanism for the entire outbound flow.</p>
+
+  <div class="slug-grid reveal">
+    <div class="slug-card" style="border-color:rgba(0,212,255,0.25);">
+      <span class="slug-icon">📦</span>
+      <div class="slug-name">Standard Slug</div>
+      <div class="slug-count">2 → MAX CONFIGURED TOTES</div>
+      <div class="slug-desc">Multiple totes within size limit. Grouped by wave / carrier / zone / cutoff. Default processing mode.</div>
+    </div>
+    <div class="slug-card" style="border-color:rgba(0,255,136,0.25);">
+      <span class="slug-icon">1️⃣</span>
+      <div class="slug-name">One-of-One Slug</div>
+      <div class="slug-count">EXACTLY 1 TOTE</div>
+      <div class="slug-desc">Single tote. Full-case or direct-ship orders. Triggered via 101 LPN Destination. No grouping wait.</div>
+    </div>
+    <div class="slug-card" style="border-color:rgba(255,184,0,0.25);">
+      <span class="slug-icon">🔗</span>
+      <div class="slug-name">Multi-Tote Slug</div>
+      <div class="slug-count">2+ TOTES, SAME ORDER</div>
+      <div class="slug-desc">Multiple totes from a single customer order. All must complete before routing proceeds.</div>
+    </div>
+    <div class="slug-card" style="border-color:rgba(168,85,247,0.25);">
+      <span class="slug-icon">📮</span>
+      <div class="slug-name">Batch Slug</div>
+      <div class="slug-count">SHARED ROUTING</div>
+      <div class="slug-desc">Totes sharing same carrier, destination, or cutoff. Grouped for sorter efficiency and reduced traversal.</div>
+    </div>
+    <div class="slug-card" style="border-color:rgba(255,77,109,0.35);">
+      <span class="slug-icon">⚠️</span>
+      <div class="slug-name">Oversize Slug</div>
+      <div class="slug-count">EXCEEDS CONFIGURED MAX</div>
+      <div class="slug-desc">Flagged for alternate routing. Alert raised. Changing max size requires empty sorter buffers — operational window required.</div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:2.5rem;">
+    <h3 style="font-family:var(--font-head);font-size:1.1rem;color:var(--white);margin-bottom:1rem;">Slug Algorithm</h3>
+    <div class="algo-steps">
+      <div class="algo-step"><div class="algo-step-num">1</div><div class="algo-step-content"><h4>Parse Wave Download File</h4><p>WES reads the 103 Wave file. Identifies ITM records with <code>Task Type</code>. Task Types starting with <code>S*</code> require slug grouping. Others are processed as one-of-one.</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">2</div><div class="algo-step-content"><h4>Group Tasks</h4><p>Group tasks by carrier, zone, cutoff, and destination. One task = one picking LPN/tote. Multi-tote orders grouped together.</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">3</div><div class="algo-step-content"><h4>Enforce Max Slug Size</h4><p>Groups within limit → Standard Slug. Groups exceeding limit → flagged as <code>Oversize</code>, alert raised, alternate routing applied.</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">4</div><div class="algo-step-content"><h4>Assign Slug ID &amp; Metadata</h4><p>Unique Slug ID assigned. Track: Wave ID, tote count, carton count, priority, process codes, batch ID, oversize flag.</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">5</div><div class="algo-step-content"><h4>Wait for Tote Pick Complete (105)</h4><p>WES waits. When <code>105 ZPK</code> received, maps tote LPN to assigned Slug ID. Updates slug tote completion count.</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">6</div><div class="algo-step-content"><h4>Send 6A2 to Sorter</h4><p>Fixed-width <code>6A2 Picked LPN Directive</code> sent to Sorter. Contains Slug ID, # totes, # cartons, priority, routing, process codes, last location.</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">7</div><div class="algo-step-content"><h4>Track Slug Closure</h4><p>All oLPNs packed (106) + all totes consumed (116) → WES sends <code>6A4 Tote Complete</code> → Slug marked CLOSED. Wave closure checked when all slugs closed.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- OUTBOUND -->
+<section id="outbound" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Outbound Process</h2>
+  </div>
+  <div class="reveal" style="overflow-x:auto;">
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Phase</th><th>Owner</th><th>Message</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="code">1</td><td>Order &amp; Allocation</td><td style="color:var(--cyan);">WMS</td><td>—</td><td>Create order. Allocate inventory. Create oLPN (Status=Allocated). Assign to Pick + Pack Wave.</td></tr>
+      <tr><td class="code">2</td><td>Wave Release</td><td style="color:var(--cyan);">WMS</td><td style="color:var(--cyan);font-family:var(--font-mono);font-size:11px;">103 WAVE DOWNLOAD</td><td>Wave file sent via sFTP. WES parses tasks, identifies S* types, builds slugs.</td></tr>
+      <tr><td class="code">3</td><td>Picking</td><td style="color:var(--cyan);">WMS</td><td style="color:var(--cyan);font-family:var(--font-mono);font-size:11px;">105 TOTE PICK COMPLETE</td><td>Picker fills tote, closes tote. WMS sends 105 ZPK. WES maps tote → slug. Sends 6A2 to Sorter.</td></tr>
+      <tr><td class="code">4</td><td>Sortation</td><td style="color:var(--purple);">Sorter</td><td style="color:var(--purple);font-family:var(--font-mono);font-size:11px;">6A2 / 6 CONFIRM</td><td>Sorter buffers tote in slug sequence. Releases to pack lane. Divert confirmed (msg 6).</td></tr>
+      <tr><td class="code">5</td><td>Packing</td><td style="color:var(--cyan);">WMS</td><td style="color:var(--cyan);font-family:var(--font-mono);font-size:11px;">106 PACKED COMPLETE</td><td>Packer fills oLPN carton. WMS validates unit count. Sends 106 PACKED (pipe-delimited) with weight, labels, reject flag, tracking #.</td></tr>
+      <tr><td class="code">6</td><td>VAS (if required)</td><td style="color:var(--cyan);">WMS</td><td style="color:var(--cyan);font-family:var(--font-mono);font-size:11px;">107 VAS COMPLETE</td><td>Reject Flag=Y → WCS routes to VAS lane. After completion WMS sends 107. WES clears flag, releases carton.</td></tr>
+      <tr><td class="code">7</td><td>Weight Validation</td><td style="color:var(--green);">WCS</td><td style="color:var(--green);font-family:var(--font-mono);font-size:11px;">200 AT/RT or DS</td><td>WCS captures actual weight. AT/RT check. Fail → QC spur. Pass → routing decision.</td></tr>
+      <tr><td class="code">8</td><td>Routing</td><td style="color:var(--green);">WCS + WMS</td><td style="color:var(--cyan);font-family:var(--font-mono);font-size:11px;">201 / 101 DEST</td><td>Known routing → divert. Unknown → 201 Route Request. WMS responds with 101 DEST. WCS executes divert.</td></tr>
+      <tr><td class="code">9</td><td>Manifest</td><td style="color:var(--green);">WCS</td><td style="color:var(--green);font-family:var(--font-mono);font-size:11px;">208 MANIFEST</td><td>Carton scanned at manifest lane. WCS sends 208. WES assigns tracking #. WMS status = Manifested.</td></tr>
+      <tr><td class="code">10</td><td>Load</td><td style="color:var(--green);">WCS</td><td style="color:var(--green);font-family:var(--font-mono);font-size:11px;">209 LOADED</td><td>Carton loaded to truck. WCS sends 209. WMS status = Shipped. Shipment closed.</td></tr>
+      <tr><td class="code">11</td><td>Tote Consume</td><td style="color:var(--cyan);">WMS</td><td style="color:var(--cyan);font-family:var(--font-mono);font-size:11px;">116 / 6A4</td><td>Empty tote. WMS sends 116. WES sends 6A4 to Sorter. Slug closure checked.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- SEQUENCE DIAGRAM -->
+<section id="diagram" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">07</span>
+    <h2 class="section-title">Animated Sequence Diagram</h2>
+  </div>
+  <p class="reveal" style="color:var(--muted);margin-bottom:1.5rem;">Step-by-step animated message flow — all 11 sections from heartbeat to wave closure. Use controls to play, pause, or step through.</p>
+
+  <div id="seq-diagram" class="reveal">
+    <div class="seq-controls">
+      <button class="seq-btn play" id="btn-play">▶ PLAY</button>
+      <button class="seq-btn pause" id="btn-pause">⏸ PAUSE</button>
+      <button class="seq-btn reset" id="btn-reset">↺ RESET</button>
+      <button class="seq-btn" id="btn-prev" style="border-color:var(--muted);color:var(--muted);">◀ PREV</button>
+      <button class="seq-btn" id="btn-next" style="border-color:var(--muted);color:var(--muted);">NEXT ▶</button>
+      <div class="seq-speed">
+        SPEED:
+        <button data-speed="1200">SLOW</button>
+        <button data-speed="700" class="active">NORMAL</button>
+        <button data-speed="350">FAST</button>
+      </div>
+      <span id="seq-counter" style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-left:auto;"></span>
+    </div>
+    <div class="seq-progress-bar"><div class="seq-progress-fill" id="seq-progress"></div></div>
+
+    <!-- Participants -->
+    <div class="seq-participants">
+      <div class="seq-participant wms">WMS<span class="p-full">Warehouse Management</span></div>
+      <div class="seq-participant wes">WES<span class="p-full">Warehouse Execution</span></div>
+      <div class="seq-participant wcs">WCS<span class="p-full">Warehouse Control</span></div>
+      <div class="seq-participant sorter">SORTER<span class="p-full">High-Speed Sortation</span></div>
+    </div>
+
+    <!-- Steps rendered by JS -->
+    <div class="seq-steps-area" id="seq-steps-area" style="padding-left:32px;"></div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- RECOVERY -->
+<section id="recovery" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">08</span>
+    <h2 class="section-title">Error Handling &amp; Recovery</h2>
+  </div>
+  <div class="reveal" style="overflow-x:auto;margin-bottom:2rem;">
+  <table class="data-table">
+    <thead><tr><th>Error Condition</th><th>Detection</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td>Invalid message format</td><td style="color:var(--amber);">WES Validation</td><td>NAK returned. Alert raised. Retry logic engaged.</td></tr>
+      <tr><td>Sequence number mismatch</td><td style="color:var(--amber);">WES Validation</td><td>NAK returned. Alert raised. Message quarantined.</td></tr>
+      <tr><td>Duplicate message (same Control ID)</td><td style="color:var(--amber);">WES Validation</td><td>Message discarded. ACK returned (idempotent accept).</td></tr>
+      <tr><td>Missing required field</td><td style="color:var(--amber);">WES Validation</td><td>NAK with field name returned. Alert raised.</td></tr>
+      <tr><td>Heartbeat timeout (WCS or Sorter)</td><td style="color:var(--amber);">WES Timer</td><td>Device marked OFFLINE. Equipment down alert to WMS. No messages forwarded to offline device.</td></tr>
+      <tr><td>Unknown LPN at inbound</td><td style="color:var(--green);">WCS Scanner</td><td>Reason code UN. WCS routes to exception spur. WMS creates manual receive task.</td></tr>
+      <tr><td>Weight tolerance failure</td><td style="color:var(--green);">WCS Scale</td><td>Reason code AT or RT. WCS routes to QC spur. WMS flags for inspection.</td></tr>
+      <tr><td>Lane full at divert</td><td style="color:var(--green);">WCS</td><td>Reason code LF. WES requests alternate lane from WMS via 201. WMS responds with 101.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="reveal">
+    <h3 style="font-family:var(--font-head);font-size:1.1rem;color:var(--white);margin-bottom:1rem;">Sorter Recovery Protocol</h3>
+    <div class="algo-steps">
+      <div class="algo-step"><div class="algo-step-num">1</div><div class="algo-step-content"><h4>Sorter Detects Directive Loss</h4><p>After restart or communication failure. Sorter sends <code>Recovery Initiation (msg 7)</code> to WES.</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">2</div><div class="algo-step-content"><h4>WES Looks Up Replay Queue</h4><p>WES queries all active slugs with outstanding directives not yet confirmed by Sorter (no msg 6 received).</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">3</div><div class="algo-step-content"><h4>WES Sends Recovery Directive (6R2)</h4><p>All outstanding <code>6A2 Picked LPN Directives</code> replayed via <code>6R2 Recovery Directive</code> to Sorter.</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">4</div><div class="algo-step-content"><h4>Sorter Resumes Processing</h4><p>Processes replayed directives. Routes totes to correct buffer lanes and pack lanes.</p></div></div>
+      <div class="algo-step"><div class="algo-step-num">5</div><div class="algo-step-content"><h4>Auto-Close After 10 Seconds</h4><p>Sorter recovery session auto-closes after 10 seconds of no additional directives. Normal operation resumes.</p></div></div>
+    </div>
+    <div style="margin-top:1rem;padding:12px 16px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:4px;">
+      <p style="font-size:12px;color:var(--green);">⬥ Recovery does NOT affect WMS inventory. WMS status remains unchanged throughout recovery. Only the Sorter's routing directive queue is restored.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- LIVE EXAMPLE -->
+<section id="example" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">09</span>
+    <h2 class="section-title">Live End-to-End Example</h2>
+  </div>
+  <p class="reveal" style="color:var(--muted);margin-bottom:2rem;">Scenario: Customer order for 3 SKUs — 1 SKU requires replenishment. VAS (special labeling) required. Ships same day via parcel. Scroll to reveal each step.</p>
+
+  <div class="example-timeline" id="example-timeline">
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">01</span><span class="ex-step-phase">Order Received</span></div><div class="ex-step-action">WMS receives customer order. Inventory allocated for 2 SKUs from forward pick. 1 SKU below pick face threshold — replenishment needed.</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">02</span><span class="ex-step-phase">oLPN Created</span></div><div class="ex-step-action">WMS creates oLPN for the shipping carton. Assigned to Pick Wave 4812 and Pack Wave 4812. Status = Allocated.</div><div class="ex-step-msg">DB: oLPN Status = Allocated</div></div>
+    <div class="ex-step step-warn"><div class="ex-step-header"><span class="ex-step-num">03</span><span class="ex-step-phase">Replenishment Triggered</span></div><div class="ex-step-action">Pick face for SKU-3 below minimum threshold. WMS auto-creates replenishment task from reserve.</div><div class="ex-step-msg">101 DEST: Reserve Location → Forward Pick</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">04</span><span class="ex-step-phase">Replenishment Executed</span></div><div class="ex-step-action">WCS moves iLPN from reserve to forward pick lane. WMS confirms new pick face quantity. SKU-3 now available.</div><div class="ex-step-msg">WCS move complete → WMS location updated</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">05</span><span class="ex-step-phase">Wave Released</span></div><div class="ex-step-action">Wave planner releases Pick Wave 4812. WMS sends 103 Wave Download to WES via sFTP.</div><div class="ex-step-msg">103 Wave Download → sFTP → WES</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">06</span><span class="ex-step-phase">Slug Built</span></div><div class="ex-step-action">WES parses wave. Task Type = S4812 (slug required). Groups into Standard Slug #SLG-1021 (3 tasks, 1 tote). Metadata: priority=1, cartons=1.</div><div class="ex-step-msg">WES: Slug SLG-1021 created, Status=OPEN</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">07</span><span class="ex-step-phase">Picking</span></div><div class="ex-step-action">Picker receives task on RF gun. Scans TOTE-8841. Picks 3 units from 3 pick faces (2 from forward + 1 from newly replenished). Closes tote.</div><div class="ex-step-msg">105 Tote Pick Complete (ZPK) → WES</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">08</span><span class="ex-step-phase">Sorter Directive</span></div><div class="ex-step-action">WES maps TOTE-8841 to Slug SLG-1021. Sends fixed-width directive to Sorter containing Slug ID, tote/carton counts, priority.</div><div class="ex-step-msg">6A2 Picked LPN Directive → Sorter</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">09</span><span class="ex-step-phase">Sorter Confirms</span></div><div class="ex-step-action">Sorter receives tote. Buffers in Slug SLG-1021 lane. Divert confirmed to WES.</div><div class="ex-step-msg">6 Divert Confirm ← Sorter</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">10</span><span class="ex-step-phase">Released to Pack</span></div><div class="ex-step-action">Sorter discharges tote to pack lane. Packer receives TOTE-8841 at station.</div><div class="ex-step-msg">Sorter discharge event → pack lane</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">11</span><span class="ex-step-phase">Packing</span></div><div class="ex-step-action">Packer scans tote + oLPN. Places 3 units in carton. Carton sealed. WMS validates all expected units present.</div><div class="ex-step-msg">Internal WMS pack validation complete</div></div>
+    <div class="ex-step step-warn"><div class="ex-step-header"><span class="ex-step-num">12</span><span class="ex-step-phase">Pack Complete — VAS Flagged</span></div><div class="ex-step-action">WMS sends Packed Complete. Reject Flag = Y (VAS open — special label required). Mode=PCL, ShipVia=UPS. Carton enters conveyor.</div><div class="ex-step-msg">106 PACKED (pipe-delimited | Reject=Y)</div></div>
+    <div class="ex-step step-warn"><div class="ex-step-header"><span class="ex-step-num">13</span><span class="ex-step-phase">VAS Routing</span></div><div class="ex-step-action">WCS receives 106 with Reject=Y. Diverts carton to VAS / special label station instead of main outbound conveyor.</div><div class="ex-step-msg">WCS: Divert → VAS Lane (Reject=Y)</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">14</span><span class="ex-step-phase">VAS Completed</span></div><div class="ex-step-action">VAS operator applies special compliance label. WMS records completion. Sends VAS Complete to WES.</div><div class="ex-step-msg">107 VAS Complete → WES</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">15</span><span class="ex-step-phase">Reject Cleared</span></div><div class="ex-step-action">WES receives 107. Clears Reject Flag. Forwards release to WCS. Carton re-enters main outbound conveyor. WES sends 6A3 to Sorter.</div><div class="ex-step-msg">6A3 Shipping Carton Complete → Sorter</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">16</span><span class="ex-step-phase">Weight Validation</span></div><div class="ex-step-action">Carton hits outbound scale. Actual = 4.2 lbs. Expected = 4.0 lbs. RT check: 5% deviation, within 10% threshold. PASS.</div><div class="ex-step-msg">WCS Weight: 4.2 lbs — AT/RT PASS</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">17</span><span class="ex-step-phase">Routing Decision</span></div><div class="ex-step-action">Mode=PCL, ShipVia=UPS. WCS has parcel routing. Parcel Group not applicable. Routes to Parcel Lane 5. Reason code = DS.</div><div class="ex-step-msg">WCS Divert: Parcel Lane 5 (Reason=DS)</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">18</span><span class="ex-step-phase">Manifest</span></div><div class="ex-step-action">Carton scanned at manifest station. WCS sends 208 Manifest. WES assigns tracking number TRK-99283441. WMS status = Manifested.</div><div class="ex-step-msg">208 MANIFEST → Tracking: TRK-99283441</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">19</span><span class="ex-step-phase">Loaded to Truck</span></div><div class="ex-step-action">Carton conveyed to UPS truck dock. Loaded. WCS sends 209 Loaded. WMS marks shipment closed. Status = Shipped.</div><div class="ex-step-msg">209 LOADED → WMS Status = SHIPPED</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">20</span><span class="ex-step-phase">Tote Consumed</span></div><div class="ex-step-action">TOTE-8841 is empty. WMS sends Consume Tote. WES sends 6A4 to Sorter. All oLPNs packed. Slug SLG-1021 = CLOSED.</div><div class="ex-step-msg">116 Consume Tote → 6A4 → Slug CLOSED</div></div>
+    <div class="ex-step step-ok"><div class="ex-step-header"><span class="ex-step-num">21</span><span class="ex-step-phase">Wave Closed</span></div><div class="ex-step-action">WES validates all slugs in Wave 4812 are closed. All confirmed. WES sends Wave Closed to WMS. Wave complete.</div><div class="ex-step-msg">WES → WMS: Wave 4812 CLOSED</div></div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- LEGENDS -->
+<section id="legends" class="section">
+  <div class="section-header reveal">
+    <span class="section-num">10</span>
+    <h2 class="section-title">Complete Legends</h2>
+  </div>
+  <div class="reveal" style="overflow-x:auto;">
+  <table class="data-table">
+    <thead><tr><th>Term</th><th>Full Form</th><th>Category</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td class="code" style="color:var(--cyan);">WMS</td><td>Warehouse Management System</td><td><span class="tag tag-system">System</span></td><td>Top-level warehouse software. System of record for all inventory, orders, waves, tasks, and shipments. Does NOT control physical devices.</td></tr>
+      <tr><td class="code" style="color:var(--amber);">WES</td><td>Warehouse Execution System</td><td><span class="tag tag-system">System</span></td><td>Middleware broker. Builds slugs, validates messages, transforms protocol formats, routes to WCS and Sorter, orchestrates recovery. Does NOT own inventory.</td></tr>
+      <tr><td class="code" style="color:var(--green);">WCS</td><td>Warehouse Control System</td><td><span class="tag tag-system">System</span></td><td>Device-level controller for conveyors, scanners, scales, dimensioners, divert motors. Real-time routing. Owns weight/dimension validation.</td></tr>
+      <tr><td class="code" style="color:var(--purple);">Sorter</td><td>High-Speed Sortation System</td><td><span class="tag tag-system">System</span></td><td>Physical sortation hardware with buffer lanes, high-speed discharge, slug sequencing, divert confirmation, and recovery initiation.</td></tr>
+      <tr><td class="code">LPN</td><td>License Plate Number</td><td><span class="tag tag-entity">Entity</span></td><td>Unique barcode on every physical carton or tote. Fundamental tracking unit. Every item entering or leaving the building has an LPN.</td></tr>
+      <tr><td class="code">iLPN</td><td>Inbound License Plate Number</td><td><span class="tag tag-entity">Entity</span></td><td>Vendor carton from supplier. Created from ASN. Lifecycle: Expected → Received → Putaway → Reserve.</td></tr>
+      <tr><td class="code">oLPN</td><td>Outbound License Plate Number</td><td><span class="tag tag-entity">Entity</span></td><td>Shipping carton to customer. Lifecycle: Allocated → Picked → Packed → Weighed → Manifested → Loaded → Shipped.</td></tr>
+      <tr><td class="code">ASN</td><td>Advanced Shipment Notice</td><td><span class="tag tag-entity">Entity</span></td><td>Batch file from vendor pre-advising a shipment. Contains iLPN list, items, quantities, weights. Enables pre-creation of receiving records.</td></tr>
+      <tr><td class="code">Wave</td><td>Pick/Pack Wave</td><td><span class="tag tag-concept">Concept</span></td><td>Grouping of orders released together. Pick Wave drives picking and slug building. Pack Wave controls packing station flow. Target: 1 wave/hour.</td></tr>
+      <tr><td class="code">Slug</td><td>Sorter Processing Group</td><td><span class="tag tag-concept">Concept</span></td><td>Sequenced, capacity-controlled group of totes processed together by the sorter. Core throughput control. Prevents buffer overflow.</td></tr>
+      <tr><td class="code">Standard Slug</td><td>Normal Multi-Tote Slug</td><td><span class="tag tag-concept">Concept</span></td><td>Multiple totes within the configured size limit. Grouped by carrier/zone/cutoff/destination. Default mode.</td></tr>
+      <tr><td class="code">One-of-One</td><td>Single-Tote Slug</td><td><span class="tag tag-concept">Concept</span></td><td>Exactly one tote. Full-case or direct-ship. Triggered via 101 LPN Destination. No grouping wait.</td></tr>
+      <tr><td class="code">Multi-Tote</td><td>Multi-Tote Slug</td><td><span class="tag tag-concept">Concept</span></td><td>Multiple totes from one customer order. All must complete before routing proceeds.</td></tr>
+      <tr><td class="code">Batch Slug</td><td>Destination-Shared Slug</td><td><span class="tag tag-concept">Concept</span></td><td>Totes sharing same routing characteristics. Grouped for sorter efficiency.</td></tr>
+      <tr><td class="code">Oversize Slug</td><td>Oversized Slug</td><td><span class="tag tag-concept">Concept</span></td><td>Exceeds configured maximum tote count. Flagged. Alert raised. Changing max requires empty sorter buffers — maintenance window needed.</td></tr>
+      <tr><td class="code">Tote</td><td>Picking Container</td><td><span class="tag tag-entity">Entity</span></td><td>Reusable container for pickers. Tracked by LPN. One task = one tote = one slug member.</td></tr>
+      <tr><td class="code">Spur</td><td>Conveyor Diversion Lane</td><td><span class="tag tag-entity">Entity</span></td><td>Lane off main conveyor where cartons are diverted. Types: parcel, live-load, LTL, reject, QC, exception.</td></tr>
+      <tr><td class="code">VAS</td><td>Value Added Services</td><td><span class="tag tag-process">Process</span></td><td>Special processing before shipment: gift wrap, compliance labeling, kitting, inspection. Reject Flag=Y while open; routes to hold lane.</td></tr>
+      <tr><td class="code">Pallet Group</td><td>Shipment Pallet Assignment</td><td><span class="tag tag-entity">Entity</span></td><td>Logical grouping of oLPNs to a pallet/trailer for LTL, TL, or live-load. Managed via msgs 117/118/119.</td></tr>
+      <tr><td class="code">Replenishment</td><td>Pick Face Replenishment</td><td><span class="tag tag-process">Process</span></td><td>Moving inventory from reserve to forward pick when face drops below threshold. Independent of slug/wave.</td></tr>
+      <tr><td class="code">Manifest</td><td>Shipping Manifest</td><td><span class="tag tag-process">Process</span></td><td>Assigning carrier tracking number to oLPN entering outbound lane. Confirms carton is being handed to carrier.</td></tr>
+      <tr><td class="code">Recovery</td><td>Sorter Recovery Protocol</td><td><span class="tag tag-process">Process</span></td><td>Sorter-initiated replay of 6A2 directives on loss. WES replays via 6R2. Auto-closes 10s after last directive. WMS unaffected.</td></tr>
+      <tr><td class="code">sFTP</td><td>Secure File Transfer Protocol</td><td><span class="tag tag-protocol">Protocol</span></td><td>Batch file transfer for ASN (100) and Wave Download (103). Not real-time. Files delivered to /interface/inbound/ folders.</td></tr>
+      <tr><td class="code">TCP/IP</td><td>Transmission Control Protocol</td><td><span class="tag tag-protocol">Protocol</span></td><td>Real-time persistent socket connections for all event messages. Reliable, ordered delivery with ACK/NAK + heartbeat.</td></tr>
+      <tr><td class="code">STX</td><td>Start of Text (0x02)</td><td><span class="tag tag-protocol">Protocol</span></td><td>ASCII control character marking the start of every socket message. Required on all TCP connections.</td></tr>
+      <tr><td class="code">ETX</td><td>End of Text (0x03)</td><td><span class="tag tag-protocol">Protocol</span></td><td>ASCII control character marking the end of every socket message. Required on all TCP connections.</td></tr>
+      <tr><td class="code">ACK</td><td>Acknowledgement</td><td><span class="tag tag-protocol">Protocol</span></td><td>Confirms successful receipt and processing of a message.</td></tr>
+      <tr><td class="code">NAK</td><td>Negative Acknowledgement</td><td><span class="tag tag-protocol">Protocol</span></td><td>Rejects a message with reason code. Triggers retry and alert in sending system.</td></tr>
+      <tr><td class="code">HB</td><td>Heartbeat Keepalive</td><td><span class="tag tag-protocol">Protocol</span></td><td>5-second periodic signal from WES to WCS/Sorter. Missing HB_ACK marks device OFFLINE immediately.</td></tr>
+      <tr><td class="code" style="color:var(--green);">DS</td><td>Diverted Successfully</td><td><span class="tag tag-reason">Reason</span></td><td>WCS confirms carton physically diverted to correct target lane. Normal success confirmation.</td></tr>
+      <tr><td class="code" style="color:var(--red);">UN</td><td>Unknown Carton</td><td><span class="tag tag-reason">Reason</span></td><td>Barcode scanned with no matching record in WES/WMS. → Exception spur.</td></tr>
+      <tr><td class="code" style="color:var(--amber);">PG</td><td>Unknown Pallet Group</td><td><span class="tag tag-reason">Reason</span></td><td>Carton's pallet group is missing. WES requests routing via 201 Route Request.</td></tr>
+      <tr><td class="code" style="color:var(--red);">AT</td><td>Absolute Tolerance Fail</td><td><span class="tag tag-reason">Reason</span></td><td>Measured weight outside fixed absolute bounds. → QC spur.</td></tr>
+      <tr><td class="code" style="color:var(--red);">RT</td><td>Relative Tolerance Fail</td><td><span class="tag tag-reason">Reason</span></td><td>Weight deviates from expected by more than configured %. → QC spur.</td></tr>
+      <tr><td class="code" style="color:var(--amber);">LF</td><td>Lane Full</td><td><span class="tag tag-reason">Reason</span></td><td>Target divert lane at capacity. WES requests alternate lane from WMS.</td></tr>
+      <tr><td class="code" style="color:var(--amber);">MD</td><td>Missing Dimensions</td><td><span class="tag tag-reason">Reason</span></td><td>Dimensioner failed to capture L/W/H. Routed to exception for manual measurement.</td></tr>
+      <tr><td class="code" style="color:var(--purple);">6A2</td><td>Picked LPN Directive</td><td><span class="tag tag-sorter">Sorter</span></td><td>Fixed-width. WES→Sorter on 105 receipt. Associates tote with slug. Contains Slug ID, tote/carton counts, priority, process codes.</td></tr>
+      <tr><td class="code" style="color:var(--purple);">6A3</td><td>Shipping Carton Complete</td><td><span class="tag tag-sorter">Sorter</span></td><td>Fixed-width. WES→Sorter forwarded from 106 Pack Complete. Notifies Sorter oLPN is ready for final sortation.</td></tr>
+      <tr><td class="code" style="color:var(--purple);">6A4</td><td>Tote Complete</td><td><span class="tag tag-sorter">Sorter</span></td><td>Fixed-width. WES→Sorter from 116 Consume Tote. Tote empty. Triggers slug closure tracking.</td></tr>
+      <tr><td class="code" style="color:var(--purple);">6R2</td><td>Recovery Directive</td><td><span class="tag tag-sorter">Sorter</span></td><td>Fixed-width. WES→Sorter. Replays 6A2 directives during recovery to restore Sorter routing queue.</td></tr>
+      <tr><td class="code" style="color:var(--purple);">6</td><td>Divert Confirmation</td><td><span class="tag tag-sorter">Sorter</span></td><td>Sorter→WES. Physical divert confirmed. Closes out the corresponding 6A2 directive.</td></tr>
+      <tr><td class="code" style="color:var(--purple);">7</td><td>Recovery Initiation</td><td><span class="tag tag-sorter">Sorter</span></td><td>Sorter→WES. Directive loss detected. Triggers WES recovery replay. Auto-close after 10s.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<footer>
+  ENTERPRISE WAREHOUSE SYSTEMS PLAYBOOK · WMS ↔ WES ↔ WCS ↔ SORTER · INTERNAL CONFIDENTIAL
+</footer>
+
+<script>
+/* ─────────────────────────────────────────
+   INTERSECTION OBSERVER — REVEAL
+───────────────────────────────────────── */
+const reveals = document.querySelectorAll('.reveal');
+const revObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+reveals.forEach(r => revObs.observe(r));
+
+/* ─────────────────────────────────────────
+   NAV ACTIVE
+───────────────────────────────────────── */
+const navLinks = document.querySelectorAll('.nav-links a');
+const sections = document.querySelectorAll('section[id]');
+const navObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const a = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if(a) a.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => navObs.observe(s));
+
+/* ─────────────────────────────────────────
+   COUNTER ANIMATION
+───────────────────────────────────────── */
+function animCounter(el) {
+  const target = parseInt(el.dataset.count);
+  let start = 0;
+  const step = Math.ceil(target / 40);
+  const timer = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = start.toLocaleString();
+    if(start >= target) clearInterval(timer);
+  }, 30);
+}
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.querySelectorAll('[data-count]').forEach(animCounter);
+      counterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stats-row').forEach(r => counterObs.observe(r));
+
+/* ─────────────────────────────────────────
+   EXAMPLE TIMELINE
+───────────────────────────────────────── */
+const exSteps = document.querySelectorAll('.ex-step');
+const exObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.4 });
+exSteps.forEach(s => exObs.observe(s));
+
+/* ─────────────────────────────────────────
+   ANIMATED SEQUENCE DIAGRAM
+───────────────────────────────────────── */
+
+// Col indices: 0=WMS, 1=WES, 2=WCS, 3=Sorter
+// Step types: 'sep', 'note', 'msg', 'self', 'alt-start', 'alt-else', 'alt-end'
+
+const SEQ_STEPS = [
+  { type:'sep', text:'A — HEARTBEAT & SYSTEM HEALTH' },
+  { type:'note', text:'LOOP: Every 5 seconds — WES polls all connected devices' },
+  { type:'msg', from:1, to:2, label:'HB Keepalive', color:'cyan', dashed:false },
+  { type:'msg', from:2, to:1, label:'HB_ACK', color:'green', dashed:true },
+  { type:'msg', from:1, to:3, label:'HB Keepalive', color:'cyan', dashed:false },
+  { type:'msg', from:3, to:1, label:'HB_ACK', color:'purple', dashed:true },
+  { type:'note', text:'ALT: Heartbeat Timeout → WES marks device OFFLINE; sends Equipment Down Alert to WMS' },
+
+  { type:'sep', text:'B — INBOUND: ASN & RECEIVING' },
+  { type:'msg', from:0, to:1, label:'100 ASN File (sFTP)', color:'cyan', dashed:false },
+  { type:'self', col:1, label:'Validate ASN schema, idempotency check', color:'amber' },
+  { type:'msg', from:1, to:2, label:'Forward ASN (preload expected LPNs)', color:'amber', dashed:false },
+  { type:'self', col:0, label:'DB: Create iLPN records — Status=Expected', color:'cyan' },
+  { type:'msg', from:2, to:1, label:'200 SCANNED (Barcode, Weight, L/W/H)', color:'green', dashed:false },
+  { type:'self', col:1, label:'Validate LPN format & sequence number', color:'amber' },
+  { type:'msg', from:1, to:0, label:'200 SCANNED (forward)', color:'cyan', dashed:true },
+  { type:'self', col:0, label:'DB: Update iLPN Status=Received', color:'cyan' },
+  { type:'note', text:'ALT: Unknown LPN (Reason=UN) → exception spur | Known → weight check' },
+  { type:'self', col:2, label:'AT check (Absolute Tolerance)', color:'green' },
+  { type:'self', col:2, label:'RT check (Relative vs ASN expected weight)', color:'green' },
+  { type:'note', text:'FAIL → Reason AT/RT → QC Spur | PASS → issue DEST' },
+  { type:'msg', from:0, to:1, label:'101 DEST (Reserve putaway location)', color:'cyan', dashed:false },
+  { type:'msg', from:1, to:2, label:'101 DEST (execute move)', color:'amber', dashed:false },
+  { type:'self', col:0, label:'DB: iLPN Status=Putaway_Ready', color:'cyan' },
+  { type:'msg', from:2, to:1, label:'202 IBPLT (pallet built, iLPN list)', color:'green', dashed:false },
+  { type:'msg', from:1, to:0, label:'202 IBPLT (forward)', color:'cyan', dashed:true },
+  { type:'self', col:0, label:'DB: Assign Pallet_ID & Reserve Location', color:'cyan' },
+  { type:'msg', from:0, to:1, label:'102 ASNVERIFY (all iLPNs received)', color:'cyan', dashed:false },
+
+  { type:'sep', text:'C — REPLENISHMENT' },
+  { type:'self', col:0, label:'Monitor pick face qty vs threshold', color:'cyan' },
+  { type:'note', text:'ALT: Below threshold → create replenishment task' },
+  { type:'msg', from:0, to:1, label:'101 DEST (Reserve → Forward Pick)', color:'cyan', dashed:false },
+  { type:'msg', from:1, to:2, label:'101 DEST (execute conveyor move)', color:'amber', dashed:false },
+  { type:'msg', from:2, to:1, label:'Move complete confirm', color:'green', dashed:true },
+  { type:'self', col:0, label:'DB: Update pick face quantity', color:'cyan' },
+
+  { type:'sep', text:'D — OUTBOUND: ORDER → WAVE' },
+  { type:'self', col:0, label:'Create Order, Allocate Inventory', color:'cyan' },
+  { type:'self', col:0, label:'Create oLPN — Status=Allocated', color:'cyan' },
+  { type:'self', col:0, label:'Assign to Pick Wave + Pack Wave', color:'cyan' },
+  { type:'msg', from:0, to:1, label:'103 Wave Download (sFTP | tasks, LPNs)', color:'cyan', dashed:false },
+  { type:'self', col:1, label:'Parse PCK/PAK/LPN/ITM records', color:'amber' },
+  { type:'self', col:1, label:'Identify S* Task Types (slug-required)', color:'amber' },
+  { type:'self', col:1, label:'Group tasks by carrier/zone/cutoff/dest', color:'amber' },
+  { type:'self', col:1, label:'Enforce max slug size; flag oversized', color:'amber' },
+  { type:'self', col:1, label:'Assign Slug IDs to task groups', color:'amber' },
+
+  { type:'sep', text:'E — PICKING & SORTER DIRECTIVE' },
+  { type:'self', col:0, label:'Generate pick tasks; pickers receive via RF gun', color:'cyan' },
+  { type:'msg', from:0, to:1, label:'105 Tote Pick Complete (ZPK)', color:'cyan', dashed:false },
+  { type:'self', col:1, label:'Map Tote LPN to Slug ID', color:'amber' },
+  { type:'self', col:1, label:'Update slug tote count', color:'amber' },
+  { type:'msg', from:1, to:3, label:'6A2 Picked LPN Directive (fixed-width)', color:'purple', dashed:false },
+  { type:'msg', from:3, to:1, label:'6 Divert Confirm (tote received)', color:'purple', dashed:true },
+  { type:'note', text:'ALT: Directive lost → Sorter sends 7 Recovery → WES replays 6A2 as 6R2' },
+
+  { type:'sep', text:'F — PACKING, VAS & ADJUSTMENTS' },
+  { type:'msg', from:0, to:1, label:'106 Packed Complete (pipe-delimited)', color:'cyan', dashed:false },
+  { type:'note', text:'106 Contains: oLPN#, Weight, Mode, ShipVia, PalletGroup, RejectFlag, ZPL, Tracking#' },
+  { type:'self', col:1, label:'DB: oLPN Status=Packed', color:'amber' },
+  { type:'msg', from:1, to:2, label:'Forward 106 (release to conveyor)', color:'amber', dashed:false },
+  { type:'msg', from:1, to:3, label:'6A3 Shipping Carton Complete', color:'purple', dashed:false },
+  { type:'note', text:'ALT: 114 Adjust/Split → WES creates child oLPN, updates WCS routing' },
+  { type:'note', text:'ALT: VAS Required (RejectFlag=Y) → WCS routes to VAS lane' },
+  { type:'msg', from:0, to:1, label:'107 VAS Complete (VAS done)', color:'cyan', dashed:false },
+  { type:'msg', from:1, to:2, label:'Clear reject, release to conveyor', color:'amber', dashed:false },
+  { type:'self', col:0, label:'DB: Status=VAS_Done', color:'cyan' },
+
+  { type:'sep', text:'G — FINAL WEIGHT VALIDATION & ROUTING' },
+  { type:'self', col:2, label:'Capture actual weight at outbound scale', color:'green' },
+  { type:'self', col:2, label:'Compare actual vs expected (from 106)', color:'green' },
+  { type:'note', text:'FAIL (AT/RT) → 200 Reject → WES routes to QC Spur | PASS → routing decision' },
+  { type:'note', text:'ALT: Routing Unknown (Reason=PG/UN) → 201 Route Request → WMS responds 101' },
+  { type:'msg', from:2, to:1, label:'201 ROUTING REQUEST', color:'green', dashed:false },
+  { type:'msg', from:1, to:0, label:'201 ROUTING REQUEST (forward)', color:'cyan', dashed:false },
+  { type:'msg', from:0, to:1, label:'101 DEST (final lane decision)', color:'cyan', dashed:false },
+  { type:'msg', from:1, to:2, label:'101 DEST (execute divert)', color:'amber', dashed:false },
+
+  { type:'sep', text:'H — MANIFEST & LOAD' },
+  { type:'msg', from:2, to:1, label:'208 MANIFEST (oLPN enters manifest lane)', color:'green', dashed:false },
+  { type:'self', col:1, label:'DB: Assign Tracking Number', color:'amber' },
+  { type:'msg', from:1, to:0, label:'208 MANIFEST (forward)', color:'cyan', dashed:true },
+  { type:'self', col:0, label:'DB: Status=Manifested, Tracking confirmed', color:'cyan' },
+  { type:'msg', from:2, to:1, label:'209 LOADED (oLPN loaded to truck)', color:'green', dashed:false },
+  { type:'self', col:1, label:'DB: oLPN Status=Shipped', color:'amber' },
+  { type:'msg', from:1, to:0, label:'209 LOADED (forward)', color:'cyan', dashed:true },
+  { type:'self', col:0, label:'DB: Shipment Closed, order fulfilled', color:'cyan' },
+
+  { type:'sep', text:'I — TOTE CONSUME & SLUG CLOSURE' },
+  { type:'msg', from:0, to:1, label:'116 Consume Tote (empty, re-enter loop)', color:'cyan', dashed:false },
+  { type:'msg', from:1, to:3, label:'6A4 Tote Complete (sorter notified)', color:'purple', dashed:false },
+  { type:'self', col:1, label:'Check: all oLPNs packed + all totes consumed', color:'amber' },
+  { type:'note', text:'If all complete → Slug marked CLOSED in DB' },
+
+  { type:'sep', text:'J — END OF WAVE' },
+  { type:'self', col:1, label:'Validate all slugs in wave are CLOSED', color:'amber' },
+  { type:'note', text:'ALT: Missing cartons → Exception Report to WMS | All complete → Wave Closed' },
+  { type:'msg', from:1, to:0, label:'Wave Closed Confirmation', color:'amber', dashed:true },
+
+  { type:'sep', text:'K — MESSAGE VALIDATION LAYER' },
+  { type:'self', col:1, label:'Validate Message Type (known?)', color:'amber' },
+  { type:'self', col:1, label:'Validate Sequence Number (correct order?)', color:'amber' },
+  { type:'self', col:1, label:'Check Duplicate Control ID (seen before?)', color:'amber' },
+  { type:'self', col:1, label:'Validate all required fields (not null?)', color:'amber' },
+  { type:'note', text:'INVALID → NAK + reason + alert + retry | VALID → ACK' },
+  { type:'msg', from:1, to:0, label:'NAK (if invalid) or ACK (if valid)', color:'amber', dashed:true },
+];
+
+const COLORS = {
+  cyan:   { line:'#00d4ff', label:'rgba(0,212,255,0.15)', text:'#00d4ff' },
+  amber:  { line:'#ffb800', label:'rgba(255,184,0,0.15)', text:'#ffb800' },
+  green:  { line:'#00ff88', label:'rgba(0,255,136,0.15)', text:'#00ff88' },
+  purple: { line:'#a855f7', label:'rgba(168,85,247,0.15)', text:'#a855f7' },
+};
+
+// Column centers as % of grid
+const COL_CENTERS = [12.5, 37.5, 62.5, 87.5];
+
+let currentStep = -1;
+let playing = false;
+let playTimer = null;
+let speed = 700;
+const area = document.getElementById('seq-steps-area');
+const progress = document.getElementById('seq-progress');
+const counter = document.getElementById('seq-counter');
+
+function renderStep(idx) {
+  if(idx < 0 || idx >= SEQ_STEPS.length) return;
+  const step = SEQ_STEPS[idx];
+  const stepNum = idx + 1;
+
+  const wrapper = document.createElement('div');
+
+  if(step.type === 'sep') {
+    wrapper.className = 'seq-sep visible';
+    wrapper.textContent = `── ${step.text} ──`;
+    area.appendChild(wrapper);
+    return;
+  }
+
+  if(step.type === 'note') {
+    wrapper.className = 'seq-note visible';
+    wrapper.textContent = step.text;
+    area.appendChild(wrapper);
+    return;
+  }
+
+  if(step.type === 'self') {
+    wrapper.className = 'seq-step visible';
+    wrapper.style.position = 'relative';
+    wrapper.style.height = '34px';
+
+    const cx = COL_CENTERS[step.col];
+    const box = document.createElement('div');
+    box.className = `self-loop-box ${['wms','wes','wcs','wcs'][step.col]}`;
+    box.textContent = `[${['WMS','WES','WCS','Sorter'][step.col]}] ${step.label}`;
+    box.style.position = 'absolute';
+    box.style.left = `calc(${cx}% - 150px)`;
+    box.style.top = '4px';
+    box.style.maxWidth = '300px';
+    wrapper.appendChild(box);
+
+    // Step number
+    const num = document.createElement('span');
+    num.className = 'seq-step-num';
+    num.textContent = stepNum;
+    wrapper.appendChild(num);
+
+    area.appendChild(wrapper);
+    return;
+  }
+
+  if(step.type === 'msg') {
+    wrapper.className = 'seq-step visible';
+    wrapper.style.height = '44px';
+    wrapper.style.position = 'relative';
+
+    const colW = 100 / 4; // 25%
+    const fromCenter = COL_CENTERS[step.from];
+    const toCenter = COL_CENTERS[step.to];
+    const goRight = step.to > step.from;
+
+    const arrowDiv = document.createElement('div');
+    arrowDiv.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;';
+
+    // Line
+    const line = document.createElement('div');
+    const left = Math.min(fromCenter, toCenter);
+    const width = Math.abs(toCenter - fromCenter);
+    const clr = COLORS[step.color];
+    line.style.cssText = `
+      position:absolute;
+      top:50%;
+      left:${left}%;
+      width:${width}%;
+      height:${step.dashed ? '0' : '1.5px'};
+      background:${step.dashed ? 'none' : clr.line};
+      transform:translateY(-50%);
+      transform-origin:${goRight ? 'left' : 'right'} center;
+      animation:growLine .4s ease both;
+    `;
+    if(step.dashed) {
+      line.style.borderTop = `1.5px dashed ${clr.line}`;
+      line.style.top = 'calc(50% - 0.75px)';
+      line.style.height = '0';
+    }
+    arrowDiv.appendChild(line);
+
+    // Arrowhead
+    const ah = document.createElement('div');
+    const ahPos = goRight ? toCenter : toCenter;
+    ah.style.cssText = `
+      position:absolute;
+      top:50%;
+      left:calc(${ahPos}% ${goRight ? '- 6px' : '+ 0px'});
+      transform:translateY(-50%);
+      width:0;height:0;
+      border-top:5px solid transparent;
+      border-bottom:5px solid transparent;
+      ${goRight
+        ? `border-left:7px solid ${clr.line};`
+        : `border-right:7px solid ${clr.line};`}
+    `;
+    arrowDiv.appendChild(ah);
+
+    // Label
+    const label = document.createElement('div');
+    const midX = (fromCenter + toCenter) / 2;
+    label.style.cssText = `
+      position:absolute;
+      top:2px;
+      left:${midX}%;
+      transform:translateX(-50%);
+      font-family:var(--font-mono);
+      font-size:9.5px;
+      font-weight:600;
+      white-space:nowrap;
+      padding:2px 6px;
+      border-radius:2px;
+      background:${clr.label};
+      color:${clr.text};
+      letter-spacing:0.02em;
+      z-index:10;
+    `;
+    label.textContent = step.label;
+    arrowDiv.appendChild(label);
+
+    wrapper.appendChild(arrowDiv);
+
+    const num = document.createElement('span');
+    num.className = 'seq-step-num';
+    num.textContent = stepNum;
+    wrapper.appendChild(num);
+
+    area.appendChild(wrapper);
+  }
+}
+
+function updateProgress() {
+  const pct = SEQ_STEPS.length > 0 ? Math.round(((currentStep + 1) / SEQ_STEPS.length) * 100) : 0;
+  progress.style.width = pct + '%';
+  counter.textContent = `${Math.max(0, currentStep + 1)} / ${SEQ_STEPS.length}`;
+}
+
+function nextStep() {
+  if(currentStep >= SEQ_STEPS.length - 1) {
+    stopPlay();
+    return;
+  }
+  currentStep++;
+  renderStep(currentStep);
+  updateProgress();
+  // Scroll to bottom of area
+  area.scrollTop = area.scrollHeight;
+  const diagEl = document.getElementById('seq-diagram');
+  const bottom = diagEl.getBoundingClientRect().bottom;
+  if(bottom < window.innerHeight - 60) {
+    // already visible
+  } else {
+    area.lastElementChild && area.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function prevStep() {
+  stopPlay();
+  if(currentStep <= 0) return;
+  // Remove last rendered element and decrement
+  area.removeChild(area.lastElementChild);
+  currentStep--;
+  updateProgress();
+}
+
+function startPlay() {
+  if(playing) return;
+  playing = true;
+  playTimer = setInterval(() => {
+    if(currentStep >= SEQ_STEPS.length - 1) { stopPlay(); return; }
+    nextStep();
+  }, speed);
+}
+
+function stopPlay() {
+  playing = false;
+  clearInterval(playTimer);
+  playTimer = null;
+}
+
+function resetDiagram() {
+  stopPlay();
+  currentStep = -1;
+  area.innerHTML = '';
+  updateProgress();
+}
+
+document.getElementById('btn-play').addEventListener('click', startPlay);
+document.getElementById('btn-pause').addEventListener('click', stopPlay);
+document.getElementById('btn-reset').addEventListener('click', resetDiagram);
+document.getElementById('btn-next').addEventListener('click', () => { stopPlay(); nextStep(); });
+document.getElementById('btn-prev').addEventListener('click', prevStep);
+
+document.querySelectorAll('.seq-speed button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.seq-speed button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    speed = parseInt(btn.dataset.speed);
+    if(playing) { stopPlay(); startPlay(); }
+  });
+});
+
+updateProgress();
+
+// Auto-start when diagram scrolls into view
+const seqObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting && currentStep === -1) {
+      setTimeout(() => startPlay(), 800);
+      seqObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+seqObs.observe(document.getElementById('seq-diagram'));
+</script>
+</body>
+</html>
